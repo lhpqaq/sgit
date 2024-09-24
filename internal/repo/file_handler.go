@@ -28,6 +28,18 @@ func AddFile(filePath, message string, commit bool) error {
 	return nil
 }
 
+func DiffFile(filePath string) error {
+	absPath, err := paths.GetAbsolutePath(filePath)
+	if err != nil {
+		return err
+	}
+	err = vcs.DiffFile(absPath)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func GetLog() ([]string, error) {
 	return []string{"Commit 1: Initial version", "Commit 2: Updated file"}, nil
 }

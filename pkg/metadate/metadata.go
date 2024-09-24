@@ -29,13 +29,11 @@ func LoadMetadata(metadataFilePath string) ([]FileMetadata, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error reading metadata file: %w", err)
 	}
-
 	var metadataList []FileMetadata
 	err = json.Unmarshal(data, &metadataList)
 	if err != nil {
 		return nil, fmt.Errorf("error unmarshaling metadata: %w", err)
 	}
-
 	return metadataList, nil
 }
 
@@ -118,15 +116,17 @@ func GetFile(filename string, metadataList *[]FileMetadata) *FileMetadata {
 func init() {
 	once.Do(func() {
 		metadataFilePath := conf.Conf.MetaDataPath
-		err := createFileIfNotExist(metadataFilePath)
-		if err != nil {
-			panic(fmt.Sprintf("error creating metadata file: %s",
-				err))
-		}
-		err = SaveMetadataFile([]FileMetadata{}, metadataFilePath)
-		if err != nil {
-			panic(fmt.Sprintf("error saving metadata file: %s",
-				err))
+		if exist, _ := paths.PathExists(metadataFilePath); !exist {
+			err := createFileIfNotExist(metadataFilePath)
+			if err != nil {
+				panic(fmt.Sprintf("error creating metadata file: %s",
+					err))
+			}
+			err = SaveMetadataFile([]FileMetadata{}, metadataFilePath)
+			if err != nil {
+				panic(fmt.Sprintf("error saving metadata file: %s",
+					err))
+			}
 		}
 	})
 }

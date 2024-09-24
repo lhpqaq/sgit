@@ -59,3 +59,22 @@ func CommitFile(filePath string, message string) error {
 	}
 	return nil
 }
+
+func DiffFile(filePath string) error {
+	files, err := metadata.GetMetadata()
+	if err != nil {
+		return err
+	}
+	target := metadata.GetFile(filePath, &files)
+	if target != nil {
+		diff, err := repo.DiffFile(conf.Conf.Repo.Path, target.GitFilename)
+		if err != nil {
+			return err
+		}
+		fmt.Println(diff)
+		return nil
+	} else {
+		fmt.Println("File not found in metadata")
+	}
+	return nil
+}
