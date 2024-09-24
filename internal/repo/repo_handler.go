@@ -7,13 +7,13 @@ import (
 	"sgit/utils/paths"
 )
 
-func InitRepo(ctx context.Context, path string, userInput chan string) error {
+func InitRepo(ctx context.Context, path string, userInput chan byte) error {
 	if exist, _ := paths.PathExists(path); !exist {
 		fmt.Printf("Directory %s does not exist. Do you want to create it? (y/n): ", path)
 
 		select {
 		case response := <-userInput:
-			if response == "y" {
+			if response == 'y' {
 				err := paths.EnsureDirExists(path)
 				if err != nil {
 					fmt.Printf("Failed to create directory: %v\n", err)
@@ -31,7 +31,7 @@ func InitRepo(ctx context.Context, path string, userInput chan string) error {
 	fmt.Printf("Create a repository in %s ? (y/n): ", path)
 	select {
 	case response := <-userInput:
-		if response == "y" {
+		if response == 'y' {
 			err := repo.PlainInit(path)
 			if err != nil {
 				return err

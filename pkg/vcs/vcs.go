@@ -1,6 +1,7 @@
 package vcs
 
 import (
+	"fmt"
 	"path"
 	"sgit/pkg/conf"
 	metadata "sgit/pkg/metadate"
@@ -19,19 +20,22 @@ func AddFile(filePath string) error {
 	}
 	target := metadata.GetFile(filePath, &files)
 	if target != nil {
-		repo.AddFile(conf.Conf.Repo.Path, target.GitFilename)
-		return nil
+		return repo.AddFile(conf.Conf.Repo.Path, target.GitFilename)
 	}
 	hashPath, err := paths.HashPath(filePath)
 	if err != nil {
 		return err
 	}
-	gitPath := path.Join(conf.Conf.Repo.Path, hashPath)
-	err = paths.SafeCopyFile(filePath, gitPath)
+	// gitPath := path.Join(conf.Conf.Repo.Path, hashPath)
+	gitPath := hashPath
+	err = paths.SafeCopyFile(filePath, path.Join(conf.Conf.Repo.Path, hashPath))
 	if err != nil {
 		return err
 	}
-	repo.AddFile(conf.Conf.Repo.Path, gitPath)
+	err = repo.AddFile(conf.Conf.Repo.Path, gitPath)
+	if err != nil {
+		return err
+	}
 	files = append(files, metadata.FileMetadata{
 		Filename:    filePath,
 		GitFilename: gitPath})
@@ -49,8 +53,9 @@ func CommitFile(filePath string, message string) error {
 	}
 	target := metadata.GetFile(filePath, &files)
 	if target != nil {
-		repo.CommitFile(conf.Conf.Repo.Path, message)
-		return nil
+		return repo.CommitFile(conf.Conf.Repo.Path, message)
+	} else {
+		fmt.Println("File not found in metadata")
 	}
 	return nil
 }

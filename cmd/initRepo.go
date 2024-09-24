@@ -22,18 +22,20 @@ var initCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx := context.Background()
 
-		userInput := make(chan string, 1)
+		userInput := make(chan byte, 1)
 		if autoYes {
 			go func() {
 				for i := 0; i < 2; i++ {
-					userInput <- "y"
+					userInput <- 'y'
 				}
 			}()
 		} else {
 			go func() {
 				var input string
-				fmt.Scanln(&input)
-				userInput <- input
+				for i := 0; i < 2; i++ {
+					fmt.Scanln(&input)
+					userInput <- input[0]
+				}
 			}()
 		}
 

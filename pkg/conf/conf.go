@@ -55,7 +55,7 @@ func Init() Config {
 
 	viper.SetDefault("debug", false)
 	viper.SetDefault("metapath", filepath.Join(dirPaths.DataDir, "sgit", "metadata.json"))
-	viper.SetDefault("repo.path", filepath.Join(dirPaths.DataDir, "sgit"))
+	viper.SetDefault("repo.path", filepath.Join(dirPaths.DataDir, "sgit", "repo"))
 	viper.SetDefault("repo.name", "repo")
 	viper.SetDefault("repo.remote", "")
 
@@ -91,7 +91,7 @@ func Init() Config {
 			config.Git.Email = gitConfig.Email
 		}
 	}
-
+	viper.WriteConfig()
 	return config
 }
 

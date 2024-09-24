@@ -9,7 +9,6 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
-// AddFile 添加一个文件到仓库的索引中 (staging area)
 func AddFile(repoPath string, filePath string) error {
 	r, err := git.PlainOpen(repoPath)
 	if err != nil {
@@ -30,7 +29,6 @@ func AddFile(repoPath string, filePath string) error {
 	return nil
 }
 
-// CommitFile 提交一个文件
 func CommitFile(repoPath string, message string) error {
 	r, err := git.PlainOpen(repoPath)
 	if err != nil {
@@ -42,7 +40,6 @@ func CommitFile(repoPath string, message string) error {
 		return fmt.Errorf("failed to get worktree: %w", err)
 	}
 
-	// 提交更改
 	commit, err := w.Commit(message, &git.CommitOptions{
 		Author: &object.Signature{
 			Name:  conf.Conf.Git.Name,
@@ -54,7 +51,6 @@ func CommitFile(repoPath string, message string) error {
 		return fmt.Errorf("failed to commit: %w", err)
 	}
 
-	// 获取提交对象以供输出
 	obj, err := r.CommitObject(commit)
 	if err != nil {
 		return fmt.Errorf("failed to get commit object: %w", err)
@@ -64,7 +60,6 @@ func CommitFile(repoPath string, message string) error {
 	return nil
 }
 
-// DiffFile 比较指定文件与上次提交的差异
 func DiffFile(repoPath string, filePath string) error {
 	r, err := git.PlainOpen(repoPath)
 	if err != nil {
@@ -81,7 +76,6 @@ func DiffFile(repoPath string, filePath string) error {
 		return fmt.Errorf("failed to get worktree status: %w", err)
 	}
 
-	// 检查指定文件的状态
 	fileStatus := status.File(filePath)
 	if fileStatus == nil {
 		return fmt.Errorf("file %s not found in worktree", filePath)

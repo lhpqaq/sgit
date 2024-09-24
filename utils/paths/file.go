@@ -131,3 +131,8 @@ func GetAbsolutePath(relativePath string) (string, error) {
 	}
 	return absPath, nil
 }
+
+// GetFileExtension 获取文件的后缀名
+func GetFileExtension(filename string) string {
+	return filepath.Ext(filename)
+}

@@ -6,7 +6,6 @@ import (
 	git "github.com/go-git/go-git/v5"
 )
 
-// PlainInit 初始化仓库
 func PlainInit(path string) error {
 	_, err := git.PlainInit(path, false)
 	if err != nil {

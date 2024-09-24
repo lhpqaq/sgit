@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"fmt"
 	"sgit/pkg/vcs"
 	"sgit/utils/paths"
 )
@@ -10,12 +11,19 @@ func AddFile(filePath, message string, commit bool) error {
 	if err != nil {
 		return err
 	}
-	vcs.AddFile(absPath)
+	err = vcs.AddFile(absPath)
+	if err != nil {
+		return err
+	}
 	if commit {
 		if message == "" {
 			message = "Add file " + filePath
 		}
-		vcs.CommitFile(absPath, message)
+		fmt.Println("Committing file...", message)
+		err = vcs.CommitFile(absPath, message)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
