@@ -1,16 +1,22 @@
 package repo
 
 import (
-	"fmt"
-	"os"
+	"sgit/pkg/vcs"
+	"sgit/utils/paths"
 )
 
-func AddFile(filePath string) error {
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return fmt.Errorf("file does not exist")
+func AddFile(filePath, message string, commit bool) error {
+	absPath, err := paths.GetAbsolutePath(filePath)
+	if err != nil {
+		return err
 	}
-
-	fmt.Println("File successfully added:", filePath)
+	vcs.AddFile(absPath)
+	if commit {
+		if message == "" {
+			message = "Add file " + filePath
+		}
+		vcs.CommitFile(absPath, message)
+	}
 	return nil
 }
 

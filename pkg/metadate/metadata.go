@@ -106,6 +106,15 @@ func createFileIfNotExist(path string) error {
 	return nil
 }
 
+func GetFile(filename string, metadataList *[]FileMetadata) *FileMetadata {
+	for _, metadata := range *metadataList {
+		if metadata.Filename == filename {
+			return &metadata
+		}
+	}
+	return nil
+}
+
 func init() {
 	once.Do(func() {
 		metadataFilePath := conf.Conf.MetaDataPath
