@@ -6,3 +6,11 @@ A single file version control system based on Git.
 
 WIP  
 
+## usage
+
+```shell
+sgit add [filename]
+# some modifications
+sgit add [filename]
+sgit log {-l length} [filename]
+```

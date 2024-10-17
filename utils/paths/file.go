@@ -112,6 +112,7 @@ func SafeCopyFile(src, dst string) error {
 	}
 
 	// 将临时文件重命名为目标文件
+	fmt.Println(dst)
 	err = os.Rename(tmpFile, dst)
 	if err != nil {
 		return fmt.Errorf("error renaming temp file to destination file: %w", err)

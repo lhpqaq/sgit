@@ -20,6 +20,10 @@ func AddFile(filePath string) error {
 	}
 	target := metadata.GetFile(filePath, &files)
 	if target != nil {
+		err = paths.SafeCopyFile(filePath, path.Join(conf.Conf.Repo.Path, target.GitFilename))
+		if err != nil {
+			return err
+		}
 		return repo.AddFile(conf.Conf.Repo.Path, target.GitFilename)
 	}
 	hashPath, err := paths.HashPath(filePath)
