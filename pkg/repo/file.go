@@ -93,7 +93,45 @@ func DiffFile(repoPath string, filePath string) (string, error) {
 
 	err = cmd.Run()
 	if err != nil {
-		return "", fmt.Errorf("failed to run git diff: %w", err)
+		return "", fmt.Errorf("failed to run git diff: %w, %s", err, out.String())
+	}
+
+	// Return the diff output as a string
+	return out.String(), nil
+}
+
+// DiffFile returns the diff of the specified file in the repository as a string.
+func FileLog(repoPath string, filePath string, length int) (string, error) {
+	r, err := git.PlainOpen(repoPath)
+	if err != nil {
+		return "", fmt.Errorf("failed to open repository: %w", err)
+	}
+
+	wt, err := r.Worktree()
+	if err != nil {
+		return "", fmt.Errorf("failed to get worktree: %w", err)
+	}
+
+	// Check if the file has been modified
+	status, err := wt.Status()
+	if err != nil {
+		return "", fmt.Errorf("failed to get worktree status: %w", err)
+	}
+
+	fileStatus := status.File(filePath)
+	if fileStatus == nil {
+		return "", fmt.Errorf("file %s not found in worktree", filePath)
+	}
+
+	// Use `git diff` command to get the diff
+	var out bytes.Buffer
+	cmd := exec.Command("git", "log", "-p", "-n", fmt.Sprintf("%d", length), "--color", "--", filePath)
+	cmd.Dir = repoPath
+	cmd.Stdout = &out
+
+	err = cmd.Run()
+	if err != nil {
+		return "", fmt.Errorf("failed to run git diff: %w, %s", err, out.String())
 	}
 
 	// Return the diff output as a string

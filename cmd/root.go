@@ -27,4 +27,5 @@ func init() {
 	rootCmd.AddCommand(initCmd)
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(diffCmd)
+	rootCmd.AddCommand(logCmd)
 }

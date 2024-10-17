@@ -78,3 +78,22 @@ func DiffFile(filePath string) error {
 	}
 	return nil
 }
+
+func FileLog(filePath string, length int) error {
+	files, err := metadata.GetMetadata()
+	if err != nil {
+		return err
+	}
+	target := metadata.GetFile(filePath, &files)
+	if target != nil {
+		diff, err := repo.FileLog(conf.Conf.Repo.Path, target.GitFilename, length)
+		if err != nil {
+			return err
+		}
+		fmt.Println(diff)
+		return nil
+	} else {
+		fmt.Println("File not found in metadata")
+	}
+	return nil
+}
